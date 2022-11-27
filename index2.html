@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
+    <style>       
+    </style>
+</head>
+
+<body style="background-color: lightblue;">
+
+    <center>
+
+        <div style="width: 90%;">
+
+            <br><h1>Adivinhe a palavra</h1><br>
+            
+            <button id="btn_iniciar" class="btn btn-primary form-control">Iniciar</button>
+
+            <div id="div_jogo" style="display: none;">
+            
+                <div class="row" id="div_letras_encontradas">   
+                </div>
+
+                <br>
+
+                <div class="row">             
+                    <div class="col-sm-5"></div>               
+                    <div class="col-sm-2">
+                        <input type="text" class="form-control" maxlength="1"  id="input_letras">
+                    </div>                    
+                    <div class="col-sm-5"></div> 
+                </div>
+
+                <br>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <h3>Letras erradas: </h3>
+                        <span id="conteudo_letras_erradas"></span>
+                    </div>
+                </div>
+            
+            </div>
+
+        </div> 
+    
+    </center>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.min.js" integrity="sha384-IDwe1+LCz02ROU9k972gdyvl+AESN10+x7tBKgc9I5HFtuNz0wWnPclzo6p9vxnk" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+
+    <script>
+
+        let letras_erradas = [];
+
+        let palavras = ["ifsc", "produção", "multimídia", "vitória", "cidade", "copa", "brasil", "qatar", "hexa"];
+        
+        let numeroSorteado = [Math.floor(Math.random() * palavras.length)];
+
+        let palavraSorteada = palavras[numeroSorteado];
+
+        console.log(palavraSorteada);
+
+        for (let i = 0; i < palavraSorteada.length; i++) {
+            $("#div_letras_encontradas").append(`
+                    <div class="col-sm-2 input_letra_encontrada">
+                        <input type="text" class="form-control" maxlength="1" disabled style="cursor: not-allowed;">
+                    </div> `);
+            
+        }
+
+        $("#btn_iniciar").click(function(){
+            Iniciar ();
+        });
+
+        function Iniciar (){
+
+            $("#btn_iniciar").hide();
+            $("#div_jogo").show();
+            $("#input_letras").focus();
+
+        }
+
+        $("#input_letras").keyup(function(){
+            Validar ();
+        });
+
+        function Validar (){
+
+            var input_letras = $("#input_letras").val();
+
+            var achou = false;
+            
+            for (let i = 0; i < palavraSorteada.length; i++) {
+                const letra = palavraSorteada[i];
+                
+                if(letra == input_letras){
+
+                    console.log(`Achou a letra ${input_letras}`);
+                    
+                    var posicao_html = i+1;
+                    $(`.input_letra_encontrada:nth-child(${posicao_html})`).find('input').val(input_letras);
+
+                }
+
+            }
+
+            if(!achou){
+
+                /**
+                 * não deixa inserir repetidas
+                 * */
+                var achou_repetida = false;
+                for (let i = 0; i < letras_erradas.length; i++) {                    
+                    const letra_errada = letras_erradas[i];
+                    if(letra_errada == input_letras){
+                        achou_repetida = true;
+                    }
+                }
+                if(!achou_repetida){
+                    letras_erradas.push(input_letras);
+                }
+                
+            }
+
+            $("#input_letras").val("");
+
+            Letras_erradas ();
+        }
+
+        function Letras_erradas (){
+
+            var letras_erradas_conteudo = "";
+            for (let i = 0; i < letras_erradas.length; i++) {
+                const letra = letras_erradas[i];
+                letras_erradas_conteudo += `${letra} `;
+            }
+
+            $("#conteudo_letras_erradas").html(letras_erradas_conteudo);
+
+        }
+
+    </script>
+
+</body>
+
