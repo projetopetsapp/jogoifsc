@@ -48,6 +48,17 @@
             
             </div>
 
+            
+            <div id="div_parabens" style="display: none;">
+                <h3>Parabéns! Você conseguiu</h3>                
+                <a href="index2.html" class="btn btn-primary form-control">Reiniciar</a>
+            </div>
+
+            <div id="div_gamepver" style="display: none;">
+                <h3 style="color: #dc3545;">Ops, suas chances acabaram.</h3>                
+                <a href="index2.html" class="btn btn-danger form-control">Reiniciar</a>
+            </div>
+
         </div> 
     
     </center>
@@ -58,6 +69,8 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
 
     <script>
+
+        let limite_tentativas_erradas = 5;
 
         let letras_erradas = [];
 
@@ -95,6 +108,8 @@
 
         function Validar (){
 
+           
+
             var input_letras = $("#input_letras").val();
 
             var achou = false;
@@ -103,6 +118,8 @@
                 const letra = palavraSorteada[i];
                 
                 if(letra == input_letras){
+
+                    achou = true;
 
                     console.log(`Achou a letra ${input_letras}`);
                     
@@ -117,7 +134,7 @@
 
                 /**
                  * não deixa inserir repetidas
-                 * */
+                */
                 var achou_repetida = false;
                 for (let i = 0; i < letras_erradas.length; i++) {                    
                     const letra_errada = letras_erradas[i];
@@ -134,9 +151,30 @@
             $("#input_letras").val("");
 
             Letras_erradas ();
+
+             // Vou validar se já preencheu todas as letras
+             var preencheu_todas = true;
+            $(".input_letra_encontrada").each(function(){
+                var letra = $(this).find("input").val();
+                if(!letra){
+                    preencheu_todas = false; 
+                }
+            });
+            if(preencheu_todas){
+                $("#div_jogo").hide();
+                $("#div_parabens").show();
+                return false;
+            }
+
         }
 
         function Letras_erradas (){
+
+            if(letras_erradas.length > limite_tentativas_erradas){
+                $("#div_jogo").hide();
+                $("#div_gamepver").show();
+                return false;
+            }
 
             var letras_erradas_conteudo = "";
             for (let i = 0; i < letras_erradas.length; i++) {
