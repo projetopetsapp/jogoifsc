@@ -102,7 +102,19 @@
 
         }
 
-        $("#input_letras").keyup(function(){
+        $("#input_letras").keyup(function(e){
+
+            var charCode = e.keyCode;
+
+           // Permite apenas letras (186 é o ç)
+            if (
+                !((charCode > 64 && charCode < 91) || (charCode > 96 && charCode < 123)) && charCode != 186
+            ){                
+                $("#input_letras").val("");
+                return false;
+            }
+         
+
             Validar ();
         });
 
